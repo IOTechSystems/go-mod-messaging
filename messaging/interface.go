@@ -42,4 +42,10 @@ type MessageClient interface {
 	// Disconnect is to close all connections on the message bus
 	// and TopicChannel will also be closed
 	Disconnect() error
+
+	// PublishBinaryData sends binary data to the message bus
+	PublishBinaryData(data []byte, topic string) error
+
+	// SubscribeBinaryData receives binary data from the specified topic, and wrap it in MessageEnvelope.
+	SubscribeBinaryData(topics []types.TopicChannel, messageErrors chan error) error
 }
