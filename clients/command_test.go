@@ -38,6 +38,14 @@ type mockMessageClient struct {
 	signal chan struct{}
 }
 
+func (m mockMessageClient) PublishBinaryData(data []byte, topic string) error {
+	return nil
+}
+
+func (m mockMessageClient) SubscribeBinaryData(topics []types.TopicChannel, messageErrors chan error) error {
+	return nil
+}
+
 func (m mockMessageClient) Connect() error {
 	//TODO implement me
 	panic("implement me")
