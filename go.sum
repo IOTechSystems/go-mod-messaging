@@ -1,5 +1,5 @@
-github.com/IOTechSystems/go-mod-core-contracts/v2 v2.0.0-20230515090118-c5ff5343002f h1:jXVcYRcSfcN+nPt0xyHkmoGp4u3i0WRivvMASjqSqds=
-github.com/IOTechSystems/go-mod-core-contracts/v2 v2.0.0-20230515090118-c5ff5343002f/go.mod h1:q7XcjFDwcm3vhU2w4pK3RqGBv1w/u7eQdZ5FxSOe/f0=
+github.com/IOTechSystems/go-mod-core-contracts/v2 v2.0.0-20230817044736-aa9dbf8aa9ca h1:FLMhYG4DUFho/mHNEfsk5Zev5p1G5fMW7r0MrJprdys=
+github.com/IOTechSystems/go-mod-core-contracts/v2 v2.0.0-20230817044736-aa9dbf8aa9ca/go.mod h1:G/dUwDyjLMD8eLLkTPv9usL0vU47ei3ClP2nz+xL0kU=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
