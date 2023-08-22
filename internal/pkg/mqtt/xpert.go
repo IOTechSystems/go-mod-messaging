@@ -7,6 +7,10 @@ import (
 	"github.com/edgexfoundry/go-mod-messaging/v2/pkg/types"
 )
 
+const (
+	UnsubscribeOperation = "Unsubscribe"
+)
+
 func (mc *Client) PublishBinaryData(data []byte, topic string) error {
 	optionsReader := mc.mqttClient.OptionsReader()
 
@@ -28,8 +32,15 @@ func (mc *Client) SubscribeBinaryData(topics []types.TopicChannel, messageErrors
 		handler := newBinaryDataMessageHandler(topic.Messages)
 		qos := optionsReader.WillQos()
 
-		token := mc.mqttClient.Subscribe(topic.Topic, qos, handler)
-		err := getTokenError(token, optionsReader.ConnectTimeout(), SubscribeOperation, "Failed to create subscription")
+		// Since the MQTT client might try to subscribe to the same topic and get the error 'not currently connected and ResumeSubs not set',
+		// we need to unsubscribe the topic before subscribing to prevent the error.
+		token := mc.mqttClient.Unsubscribe(topic.Topic)
+		err := getTokenError(token, optionsReader.ConnectTimeout(), UnsubscribeOperation, "Failed to unsubscribe")
+		if err != nil {
+			return err
+		}
+		token = mc.mqttClient.Subscribe(topic.Topic, qos, handler)
+		err = getTokenError(token, optionsReader.ConnectTimeout(), SubscribeOperation, "Failed to create subscription")
 		if err != nil {
 			return err
 		}
