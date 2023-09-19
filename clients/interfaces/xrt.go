@@ -21,7 +21,7 @@ type XrtClient interface {
 	AddDiscoveredDevice(ctx context.Context, device models.Device) errors.EdgeX
 	ScanDevice(ctx context.Context, device models.Device) errors.EdgeX
 
-	ReadDeviceResources(ctx context.Context, deviceName string, resourceNames []string) (map[string]xrtmodels.Reading, errors.EdgeX)
+	ReadDeviceResources(ctx context.Context, deviceName string, resourceNames []string) (xrtmodels.MultiResourcesResult, errors.EdgeX)
 	WriteDeviceResources(ctx context.Context, deviceName string, resourceValuePairs, options map[string]interface{}) errors.EdgeX
 
 	AllSchedules(ctx context.Context) ([]string, errors.EdgeX)

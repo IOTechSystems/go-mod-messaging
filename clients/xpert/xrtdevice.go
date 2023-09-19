@@ -107,15 +107,15 @@ func (c *xrtClient) ScanDevice(ctx context.Context, device models.Device) errors
 	return nil
 }
 
-func (c *xrtClient) ReadDeviceResources(ctx context.Context, deviceName string, resourceNames []string) (map[string]xrtmodels.Reading, errors.EdgeX) {
+func (c *xrtClient) ReadDeviceResources(ctx context.Context, deviceName string, resourceNames []string) (xrtmodels.MultiResourcesResult, errors.EdgeX) {
 	request := xrtmodels.NewDeviceResourceGetRequest(deviceName, clientName, resourceNames)
 	var response xrtmodels.MultiResourcesResponse
 
 	err := c.sendXrtRequest(ctx, request.RequestId, request, &response)
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.Kind(err), "failed to read device resources", err)
+		return xrtmodels.MultiResourcesResult{}, errors.NewCommonEdgeX(errors.Kind(err), "failed to read device resources", err)
 	}
-	return response.Result.Readings, nil
+	return response.Result, nil
 }
 
 func (c *xrtClient) WriteDeviceResources(ctx context.Context, deviceName string, resourceValuePairs, options map[string]interface{}) errors.EdgeX {
