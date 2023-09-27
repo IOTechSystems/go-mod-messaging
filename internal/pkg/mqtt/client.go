@@ -17,6 +17,8 @@ package mqtt
 import (
 	"crypto/tls"
 	"encoding/json"
+	"fmt"
+	"sync"
 	"time"
 
 	"github.com/edgexfoundry/go-mod-messaging/internal/pkg"
@@ -37,23 +39,36 @@ type MessageUnmarshaler func(data []byte, v interface{}) error
 // Client facilitates communication to an MQTT server and provides functionality needed to send and receive MQTT
 // messages.
 type Client struct {
-	wrappedClient mqtt.Client
-	marshaler     MessageMarshaler
-	unmarshaler   MessageUnmarshaler
+	wrappedClient         mqtt.Client
+	marshaler             MessageMarshaler
+	unmarshaler           MessageUnmarshaler
+	existingSubscriptions map[string]existingSubscription
+	subscriptionMutex     *sync.Mutex
+}
+
+type existingSubscription struct {
+	topic   string
+	qos     byte
+	handler mqtt.MessageHandler
+	errors  chan error
 }
 
 // NewMQTTClient constructs a new MQTT client based on the options provided.
 func NewMQTTClient(options types.MessageBusConfig) (Client, error) {
-	mqttClient, err := DefaultClientCreator()(options)
+	client := Client{
+		marshaler:             json.Marshal,
+		unmarshaler:           json.Unmarshal,
+		existingSubscriptions: make(map[string]existingSubscription),
+		subscriptionMutex:     new(sync.Mutex),
+	}
+
+	mqttClient, err := client.DefaultClientCreator()(options)
 	if err != nil {
 		return Client{}, err
 	}
+	client.wrappedClient = mqttClient
 
-	return Client{
-		wrappedClient: mqttClient,
-		marshaler:     json.Marshal,
-		unmarshaler:   json.Unmarshal,
-	}, nil
+	return client, nil
 }
 
 // NewMQTTClientWithCreator constructs a new MQTT client based on the options and ClientCreator provided.
@@ -92,6 +107,24 @@ func (mc Client) Connect() error {
 		"Unable to connect")
 }
 
+func (mc *Client) onConnectHandler(_ mqtt.Client) {
+	optionsReader := mc.wrappedClient.OptionsReader()
+
+	mc.subscriptionMutex.Lock()
+	defer mc.subscriptionMutex.Unlock()
+	fmt.Print("Resubscribe to the existing subscriptions...\n")
+	// existingSubscriptions will be empty on the first connection.
+	// On a re-connect is when the subscriptions must be re-created.
+	for _, subscription := range mc.existingSubscriptions {
+		token := mc.wrappedClient.Subscribe(subscription.topic, subscription.qos, subscription.handler)
+		message := fmt.Sprintf("Failed to re-create subscription for topic=%s", subscription.topic)
+		err := getTokenError(token, optionsReader.ConnectTimeout(), SubscribeOperation, message)
+		if err != nil {
+			subscription.errors <- err
+		}
+	}
+}
+
 // Publish sends a message to the connected MQTT server.
 func (mc Client) Publish(message types.MessageEnvelope, topic string) error {
 	marshaledMessage, err := mc.marshaler(message)
@@ -117,16 +150,26 @@ func (mc Client) Subscribe(topics []types.TopicChannel, messageErrors chan error
 	optionsReader := mc.wrappedClient.OptionsReader()
 
 	for _, topic := range topics {
+		handler := newMessageHandler(mc.unmarshaler, topic.Messages, messageErrors)
+		qos := optionsReader.WillQos()
+
 		err := getTokenError(
 			mc.wrappedClient.Subscribe(
 				topic.Topic,
-				optionsReader.WillQos(),
-				newMessageHandler(mc.unmarshaler, topic.Messages, messageErrors)),
+				qos,
+				handler),
 			optionsReader.ConnectTimeout(),
 			SubscribeOperation,
 			"Failed to create subscription")
 		if err != nil {
 			return err
+		}
+
+		mc.existingSubscriptions[topic.Topic] = existingSubscription{
+			topic:   topic.Topic,
+			qos:     qos,
+			handler: handler,
+			errors:  messageErrors,
 		}
 	}
 
@@ -145,7 +188,7 @@ func (mc Client) Disconnect() error {
 }
 
 // DefaultClientCreator returns a default function for creating MQTT clients.
-func DefaultClientCreator() ClientCreator {
+func (mc *Client) DefaultClientCreator() ClientCreator {
 	return func(options types.MessageBusConfig) (mqtt.Client, error) {
 		clientConfiguration, err := CreateMQTTClientConfiguration(options)
 		if err != nil {
@@ -157,6 +200,7 @@ func DefaultClientCreator() ClientCreator {
 			return nil, err
 		}
 
+		clientOptions.OnConnect = mc.onConnectHandler
 		return mqtt.NewClient(clientOptions), nil
 	}
 }
@@ -237,6 +281,7 @@ func createClientOptions(
 	clientOptions.SetClientID(clientConfiguration.ClientId)
 	clientOptions.SetKeepAlive(time.Duration(clientConfiguration.KeepAlive) * time.Second)
 	clientOptions.SetAutoReconnect(clientConfiguration.AutoReconnect)
+	clientOptions.SetCleanSession(clientConfiguration.CleanSession)
 	clientOptions.SetConnectTimeout(time.Duration(clientConfiguration.ConnectTimeout) * time.Second)
 	tlsConfiguration, err := pkg.GenerateTLSForClientClientOptions(
 		clientConfiguration.BrokerURL,
