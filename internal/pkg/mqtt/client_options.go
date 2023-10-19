@@ -34,7 +34,7 @@ type MQTTClientConfig struct {
 // ConnectionOptions contains the connection configurations for the MQTT client.
 //
 // NOTE: The connection properties resides in its own struct in order to avoid the property being loaded in via
-//  reflection during the load process.
+// reflection during the load process.
 type ConnectionOptions struct {
 	BrokerURL string
 }
@@ -50,6 +50,7 @@ type MQTTClientOptions struct {
 	KeepAlive      int // Seconds
 	Retained       bool
 	AutoReconnect  bool
+	CleanSession   bool
 	ConnectTimeout int // Seconds
 	pkg.TlsConfigurationOptions
 }
@@ -103,6 +104,7 @@ func CreateMQTTClientOptionsWithDefaults() MQTTClientOptions {
 		Retained:                false,
 		ConnectTimeout:          5, // 5 seconds
 		AutoReconnect:           false,
+		CleanSession:            true, // MQTT Default is true if never set
 		TlsConfigurationOptions: pkg.CreateDefaultTlsConfigurationOptions(),
 	}
 }
