@@ -7,8 +7,8 @@ require (
 	github.com/edgexfoundry/go-mod-core-contracts/v2 v2.3.0
 	github.com/go-redis/redis/v7 v7.3.0
 	github.com/google/uuid v1.3.0
-	github.com/nats-io/nats-server/v2 v2.9.3
-	github.com/nats-io/nats.go v1.18.0
+	github.com/nats-io/nats-server/v2 v2.9.23
+	github.com/nats-io/nats.go v1.28.0
 	github.com/pebbe/zmq4 v1.2.7
 	github.com/stretchr/testify v1.8.1
 )
@@ -23,11 +23,11 @@ require (
 	github.com/go-playground/validator/v10 v10.11.1 // indirect
 	github.com/golang/protobuf v1.5.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
-	github.com/klauspost/compress v1.15.11 // indirect
+	github.com/klauspost/compress v1.16.7 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/minio/highwayhash v1.0.2 // indirect
-	github.com/nats-io/jwt/v2 v2.3.0 // indirect
-	github.com/nats-io/nkeys v0.3.0 // indirect
+	github.com/nats-io/jwt/v2 v2.5.0 // indirect
+	github.com/nats-io/nkeys v0.4.4 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
@@ -37,7 +37,7 @@ require (
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
-	golang.org/x/time v0.0.0-20220922220347-f3bd1da661af // indirect
+	golang.org/x/time v0.3.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
