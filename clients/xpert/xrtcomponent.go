@@ -4,6 +4,7 @@ package xpert
 
 import (
 	"context"
+	"time"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/xrtmodels"
@@ -26,4 +27,21 @@ func (c *xrtClient) UpdateLuaScript(ctx context.Context, luaScript string) error
 		return errors.NewCommonEdgeX(errors.Kind(err), "failed to update the Lua script to Lua transform component", err)
 	}
 	return nil
+}
+
+func (c *xrtClient) DiscoverComponents(ctx context.Context, category string, subscribeTimeout time.Duration) ([]xrtmodels.MultiComponentsResponse, errors.EdgeX) {
+	request := xrtmodels.NewComponentDiscoverRequest(clientName, category)
+	var response []xrtmodels.MultiComponentsResponse
+
+	err := c.sendXrtRequestWithSubTimeout(ctx, c.requestTopic, request.RequestId, request, &response, subscribeTimeout)
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.Kind(err), "failed to discover the xrt components", err)
+	}
+
+	for _, compResp := range response {
+		if compResp.Result.Error() != nil {
+			return nil, compResp.Result.Error()
+		}
+	}
+	return response, nil
 }

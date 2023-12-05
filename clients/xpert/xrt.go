@@ -177,6 +177,30 @@ func (c *xrtClient) sendXrtRequestWithTimeout(ctx context.Context, requestTopic 
 	return nil
 }
 
+// sendXrtRequestWithSubTimeout publish the xrt request and wait for responses from multiple xrt nodes for the specific subscribe timeout
+func (c *xrtClient) sendXrtRequestWithSubTimeout(ctx context.Context, requestTopic string, requestId string, request interface{},
+	response interface{}, subscribeTimeout time.Duration) errors.EdgeX {
+	jsonData, err := json.Marshal(request)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+
+	// Before publishing the request, we should create responseChan to receive the response from XRT
+	c.requestMap.Add(requestId)
+
+	err = c.messageBus.PublishBinaryData(jsonData, requestTopic)
+	if err != nil {
+		return errors.NewCommonEdgeX(errors.Kind(err), "failed to send the XRT request", err)
+	}
+
+	edgexErr := utils.FetchXRTResWithSubTimeout(ctx, requestId, c.requestMap, subscribeTimeout, response)
+	if edgexErr != nil {
+		return errors.NewCommonEdgeXWrapper(edgexErr)
+	}
+
+	return nil
+}
+
 func initSubscriptions(ctx context.Context, xrtClient *xrtClient, clientOptions *ClientOptions, lc logger.LoggingClient) errors.EdgeX {
 	subscriptions := createSubscriptions(xrtClient, clientOptions)
 	messageErrors := make(chan error)
