@@ -2,7 +2,7 @@
 
 package redis
 
-import "github.com/edgexfoundry/go-mod-messaging/v2/pkg/types"
+import "github.com/edgexfoundry/go-mod-messaging/v3/pkg/types"
 
 func (r *SubscriptionRedisClientMock) PublishBinaryData(topic string, data []byte) error {
 	return nil

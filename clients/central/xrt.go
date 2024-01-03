@@ -1,6 +1,6 @@
 // Copyright (C) 2023 IOTech Ltd
 
-package xpert
+package central
 
 import (
 	"context"
@@ -8,17 +8,17 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/xrtmodels"
-	"github.com/edgexfoundry/go-mod-messaging/v2/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-messaging/v2/clients/xpert/utils"
-	"github.com/edgexfoundry/go-mod-messaging/v2/messaging"
-	"github.com/edgexfoundry/go-mod-messaging/v2/pkg/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/clients/logger"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/xrtmodels"
+	"github.com/edgexfoundry/go-mod-messaging/v3/clients/central/utils"
+	"github.com/edgexfoundry/go-mod-messaging/v3/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-messaging/v3/messaging"
+	"github.com/edgexfoundry/go-mod-messaging/v3/pkg/types"
 )
 
 const (
-	clientName = "xrt-go-client"
+	clientName = "central-go-client"
 )
 
 // xrtClient implements the client of MQTT management API, https://docs.iotechsys.com/edge-xrt21/mqtt-management/mqtt-management.html

@@ -1,12 +1,12 @@
 // Copyright (C) 2023 IOTech Ltd
 
-package xpert
+package central
 
 import (
 	"context"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/xrtmodels"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/xrtmodels"
 )
 
 const (

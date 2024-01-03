@@ -4,7 +4,7 @@ package mqtt
 
 import (
 	pahoMqtt "github.com/eclipse/paho.mqtt.golang"
-	"github.com/edgexfoundry/go-mod-messaging/v2/pkg/types"
+	"github.com/edgexfoundry/go-mod-messaging/v3/pkg/types"
 )
 
 const (
@@ -45,12 +45,12 @@ func (mc *Client) SubscribeBinaryData(topics []types.TopicChannel, messageErrors
 			return err
 		}
 
-		mc.activeSubscriptions = append(mc.activeSubscriptions, activeSubscription{
+		mc.existingSubscriptions[topic.Topic] = existingSubscription{
 			topic:   topic.Topic,
 			qos:     qos,
 			handler: handler,
 			errors:  messageErrors,
-		})
+		}
 
 	}
 

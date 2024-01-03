@@ -9,7 +9,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
 )
 
 func FetchXRTResponse(ctx context.Context, requestId string, requestMap RequestMap, responseTimeout time.Duration) ([]byte, errors.EdgeX) {

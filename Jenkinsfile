@@ -1,4 +1,4 @@
-// Copyright (C) 2023 IOTech Ltd
+// Copyright (C) 2023-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -6,5 +6,5 @@
 
 goModVersionTag(
     project: "go-mod-messaging",
-    version: "2.3"
+    version: "3.1"
 )

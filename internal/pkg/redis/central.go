@@ -3,12 +3,12 @@
 package redis
 
 import (
-	"github.com/edgexfoundry/go-mod-messaging/v2/internal/pkg"
-	"github.com/edgexfoundry/go-mod-messaging/v2/pkg/types"
+	"github.com/edgexfoundry/go-mod-messaging/v3/internal/pkg"
+	"github.com/edgexfoundry/go-mod-messaging/v3/pkg/types"
 )
 
 func (c Client) PublishBinaryData(data []byte, topic string) error {
-	if c.publishClient == nil {
+	if c.redisClient == nil {
 		return pkg.NewMissingConfigurationErr("PublishHostInfo", "Unable to create a connection for publishing")
 	}
 
@@ -18,11 +18,11 @@ func (c Client) PublishBinaryData(data []byte, topic string) error {
 	}
 
 	topic = convertToRedisTopicScheme(topic)
-	return c.publishClient.SendBinaryData(topic, data)
+	return c.redisClient.SendBinaryData(topic, data)
 }
 
 func (c Client) SubscribeBinaryData(topics []types.TopicChannel, messageErrors chan error) error {
-	if c.subscribeClient == nil {
+	if c.redisClient == nil {
 		return pkg.NewMissingConfigurationErr("SubscribeHostInfo", "Unable to create a connection for subscribing")
 	}
 
@@ -36,7 +36,7 @@ func (c Client) SubscribeBinaryData(topics []types.TopicChannel, messageErrors c
 			topicName := convertToRedisTopicScheme(topic.Topic)
 			messageChannel := topic.Messages
 			for {
-				message, err := c.subscribeClient.ReceiveBinaryData(topicName)
+				message, err := c.redisClient.ReceiveBinaryData(topicName)
 				if err != nil {
 					messageErrors <- err
 					continue
@@ -61,7 +61,10 @@ func (g *goRedisWrapper) SendBinaryData(topic string, data []byte) error {
 }
 
 func (g *goRedisWrapper) ReceiveBinaryData(topic string) (*types.MessageEnvelope, error) {
-	subscription := g.getSubscription(topic)
+	subscription, err := g.getSubscription(topic)
+	if err != nil {
+		return nil, err
+	}
 	data, err := subscription.ReceiveMessage()
 	if err != nil {
 		return nil, err

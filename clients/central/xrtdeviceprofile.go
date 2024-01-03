@@ -1,14 +1,14 @@
 // Copyright (C) 2023 IOTech Ltd
 
-package xpert
+package central
 
 import (
 	"context"
 	"fmt"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/xrtmodels"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/xrtmodels"
 )
 
 func (c *xrtClient) AllDeviceProfiles(ctx context.Context) ([]string, errors.EdgeX) {
