@@ -35,6 +35,7 @@ type XrtClient interface {
 	DeleteDeviceProfileByName(ctx context.Context, name string) errors.EdgeX
 
 	UpdateLuaScript(ctx context.Context, luaScript string) errors.EdgeX
+	DiscoverComponents(ctx context.Context, category string, subscribeTimeout time.Duration) ([]xrtmodels.MultiComponentsResponse, errors.EdgeX)
 
 	TriggerDiscovery(ctx context.Context) errors.EdgeX
 
