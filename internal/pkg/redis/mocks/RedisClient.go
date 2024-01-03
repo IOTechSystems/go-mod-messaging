@@ -67,6 +67,20 @@ func (_m *RedisClient) Send(topic string, message types.MessageEnvelope) error {
 	return r0
 }
 
+// SendBinaryData provides a mock function with given fields: topic, data
+func (_m *RedisClient) SendBinaryData(topic string, data []byte) error {
+	ret := _m.Called(topic, data)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, []byte) error); ok {
+		r0 = rf(topic, data)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // Subscribe provides a mock function with given fields: topic
 func (_m *RedisClient) Subscribe(topic string) error {
 	ret := _m.Called(topic)

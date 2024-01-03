@@ -57,6 +57,20 @@ func (_m *MessageClient) Publish(message types.MessageEnvelope, topic string) er
 	return r0
 }
 
+// PublishBinaryData provides a mock function with given fields: data, topic
+func (_m *MessageClient) PublishBinaryData(data []byte, topic string) error {
+	ret := _m.Called(data, topic)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func([]byte, string) error); ok {
+		r0 = rf(data, topic)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // Request provides a mock function with given fields: message, requestTopic, responseTopicPrefix, timeout
 func (_m *MessageClient) Request(message types.MessageEnvelope, requestTopic string, responseTopicPrefix string, timeout time.Duration) (*types.MessageEnvelope, error) {
 	ret := _m.Called(message, requestTopic, responseTopicPrefix, timeout)
@@ -82,6 +96,20 @@ func (_m *MessageClient) Request(message types.MessageEnvelope, requestTopic str
 
 // Subscribe provides a mock function with given fields: topics, messageErrors
 func (_m *MessageClient) Subscribe(topics []types.TopicChannel, messageErrors chan error) error {
+	ret := _m.Called(topics, messageErrors)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func([]types.TopicChannel, chan error) error); ok {
+		r0 = rf(topics, messageErrors)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// SubscribeBinaryData provides a mock function with given fields: topics, messageErrors
+func (_m *MessageClient) SubscribeBinaryData(topics []types.TopicChannel, messageErrors chan error) error {
 	ret := _m.Called(topics, messageErrors)
 
 	var r0 error

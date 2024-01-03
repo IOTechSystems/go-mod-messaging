@@ -35,3 +35,5 @@ require (
 	golang.org/x/text v0.14.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/edgexfoundry/go-mod-core-contracts/v2 => github.com/IOTechSystems/go-mod-core-contracts/v2 v2.3.20
