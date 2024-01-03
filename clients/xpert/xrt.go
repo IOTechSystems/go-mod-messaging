@@ -178,8 +178,8 @@ func (c *xrtClient) sendXrtRequestWithTimeout(ctx context.Context, requestTopic 
 }
 
 // sendXrtRequestWithSubTimeout publish the xrt request and wait for responses from multiple xrt nodes for the specific subscribe timeout
-func (c *xrtClient) sendXrtRequestWithSubTimeout(ctx context.Context, requestTopic string, requestId string, request interface{},
-	response interface{}, subscribeTimeout time.Duration) errors.EdgeX {
+func (c *xrtClient) sendXrtRequestWithSubTimeout(ctx context.Context, requestTopic string, requestId string, request any,
+	response any, subscribeTimeout time.Duration) errors.EdgeX {
 	jsonData, err := json.Marshal(request)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)

@@ -38,10 +38,5 @@ func (c *xrtClient) DiscoverComponents(ctx context.Context, category string, sub
 		return nil, errors.NewCommonEdgeX(errors.Kind(err), "failed to discover the xrt components", err)
 	}
 
-	for _, compResp := range response {
-		if compResp.Result.Error() != nil {
-			return nil, compResp.Result.Error()
-		}
-	}
 	return response, nil
 }
