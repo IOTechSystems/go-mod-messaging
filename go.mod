@@ -6,7 +6,7 @@ require (
 	github.com/eclipse/paho.mqtt.golang v1.4.3
 	github.com/edgexfoundry/go-mod-core-contracts/v2 v2.3.0
 	github.com/go-redis/redis/v7 v7.3.0
-	github.com/google/uuid v1.5.0
+	github.com/google/uuid v1.6.0
 	github.com/nats-io/nats-server/v2 v2.10.4
 	github.com/nats-io/nats.go v1.31.0
 	github.com/pebbe/zmq4 v1.2.10
