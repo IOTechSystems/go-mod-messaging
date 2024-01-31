@@ -19,6 +19,7 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"encoding/pem"
+	"errors"
 	"fmt"
 	"os"
 	"sync"
@@ -209,6 +210,11 @@ func (mc *Client) Unsubscribe(topics ...string) error {
 
 // Disconnect closes the connection to the connected MQTT server.
 func (mc *Client) Disconnect() error {
+	// mqttClient not exists
+	if mc.mqttClient == nil {
+		return errors.New("mqtt client not exists")
+	}
+
 	// Specify a wait time equal to the write timeout so that we allow other any queued processing to complete before
 	// disconnecting.
 	optionsReader := mc.mqttClient.OptionsReader()

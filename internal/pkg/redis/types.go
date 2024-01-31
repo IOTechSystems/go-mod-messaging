@@ -52,4 +52,10 @@ type RedisClient interface {
 	Receive(topic string) (*types.MessageEnvelope, error)
 	// Close cleans up any entities which need to be deconstructed.
 	Close() error
+
+	// SendBinaryData sends a binary data to the specified topic.
+	SendBinaryData(topic string, data []byte) error
+
+	// ReceiveBinaryData receives binary data from the specified topic, and wrap it in MessageEnvelope.
+	ReceiveBinaryData(topic string) (*types.MessageEnvelope, error)
 }
