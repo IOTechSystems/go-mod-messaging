@@ -48,4 +48,7 @@ type MessageClient interface {
 
 	// SubscribeBinaryData receives binary data from the specified topic, and wrap it in MessageEnvelope.
 	SubscribeBinaryData(topics []types.TopicChannel, messageErrors chan error) error
+
+	// Unsubscribe ends the subscription from the provided topics
+	Unsubscribe(topic string) error
 }
