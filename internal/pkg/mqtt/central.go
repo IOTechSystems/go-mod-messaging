@@ -1,4 +1,4 @@
-// Copyright (C) 2023 IOTech Ltd
+// Copyright (C) 2023-2024 IOTech Ltd
 
 package mqtt
 
@@ -65,4 +65,15 @@ func newBinaryDataMessageHandler(messageChannel chan<- types.MessageEnvelope) pa
 		messageEnvelope.ReceivedTopic = message.Topic()
 		messageChannel <- messageEnvelope
 	}
+}
+
+func (mc *Client) Unsubscribe(topic string) error {
+	optionsReader := mc.mqttClient.OptionsReader()
+
+	token := mc.mqttClient.Unsubscribe(topic)
+	err := getTokenError(token, optionsReader.ConnectTimeout(), UnsubscribeOperation, "Failed to unsubscribe")
+	if err != nil {
+		return err
+	}
+	return nil
 }

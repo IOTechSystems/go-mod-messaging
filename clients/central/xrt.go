@@ -1,4 +1,4 @@
-// Copyright (C) 2023 IOTech Ltd
+// Copyright (C) 2023-2024 IOTech Ltd
 
 package central
 
@@ -224,6 +224,12 @@ func initSubscriptions(ctx context.Context, xrtClient *xrtClient, clientOptions 
 				select {
 				case <-ctx.Done():
 					lc.Infof("Exiting waiting for MessageBus '%s' topic messages", subscription.topicChannel.Topic)
+
+					// unsubscribe from the waiting topic
+					err := xrtClient.messageBus.Unsubscribe(subscription.topicChannel.Topic)
+					if err != nil {
+						lc.Errorf("Error occurred while unsubscribing from topic %s", subscription.topicChannel.Topic)
+					}
 					return
 				case message := <-subscription.topicChannel.Messages:
 					lc.Debugf("Received message from the topic %s", subscription.topicChannel.Topic)

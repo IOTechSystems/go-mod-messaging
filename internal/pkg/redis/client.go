@@ -311,3 +311,5 @@ func convertFromRedisTopicScheme(topic string) string {
 
 	return topic
 }
+
+func (c Client) Unsubscribe(topic string) error { return nil }
