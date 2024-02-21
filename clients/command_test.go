@@ -46,6 +46,10 @@ func (m mockMessageClient) SubscribeBinaryData(topics []types.TopicChannel, mess
 	return nil
 }
 
+func (m mockMessageClient) Unsubscribe(topic string) error {
+	return nil
+}
+
 func (m mockMessageClient) Connect() error {
 	//TODO implement me
 	panic("implement me")

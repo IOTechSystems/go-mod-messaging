@@ -1,4 +1,4 @@
-// Copyright (C) 2023 IOTech Ltd
+// Copyright (C) 2023-2024 IOTech Ltd
 
 package redis
 
@@ -13,5 +13,9 @@ func (r *SubscriptionRedisClientMock) ReceiveBinaryData(topic string) (*types.Me
 }
 
 func (r *SubscriptionRedisClientMock) SendBinaryData(topic string, data []byte) error {
+	return nil
+}
+
+func (r *SubscriptionRedisClientMock) Unsubscribe(topic string) error {
 	return nil
 }
