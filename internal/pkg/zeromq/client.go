@@ -266,5 +266,3 @@ func (client *zeromqClient) sendMessage(topic string, message []byte) (int, erro
 	defer client.lock.Unlock()
 	return client.publisher.SendMessage(topic, message)
 }
-
-func (client *zeromqClient) Unsubscribe(topic string) error { return nil }

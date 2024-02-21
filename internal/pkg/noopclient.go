@@ -21,5 +21,3 @@ func (n NoopClient) Subscribe(topics []types.TopicChannel, messageErrors chan er
 func (n NoopClient) Disconnect() error {
 	panic("implement me")
 }
-
-func (n NoopClient) Unsubscribe(topic string) error { return nil }
