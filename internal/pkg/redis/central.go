@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 IOTech Ltd
+// Copyright (C) 2023 IOTech Ltd
 
 package redis
 
@@ -51,8 +51,6 @@ func (c Client) SubscribeBinaryData(topics []types.TopicChannel, messageErrors c
 
 	return nil
 }
-
-func (c Client) Unsubscribe(topic string) error { return nil }
 
 func (g *goRedisWrapper) SendBinaryData(topic string, data []byte) error {
 	_, err := g.wrappedClient.Publish(topic, data).Result()

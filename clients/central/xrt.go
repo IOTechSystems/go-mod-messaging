@@ -225,12 +225,10 @@ func initSubscriptions(ctx context.Context, xrtClient *xrtClient, clientOptions 
 				case <-ctx.Done():
 					lc.Infof("Exiting waiting for MessageBus '%s' topic messages", subscription.topicChannel.Topic)
 
-					// check if the messaging client can be converted to CentralMsgClient to invoke the Unsubscribe method
-					if msgClient, ok := xrtClient.messageBus.(messaging.CentralMsgClient); ok {
-						err := msgClient.Unsubscribe(subscription.topicChannel.Topic)
-						if err != nil {
-							lc.Errorf("Error occurred while unsubscribing from topic %s", subscription.topicChannel.Topic)
-						}
+					// invoke the Unsubscribe method before exiting waiting for specific topic
+					err := xrtClient.messageBus.Unsubscribe(subscription.topicChannel.Topic)
+					if err != nil {
+						lc.Errorf("Error occurred while unsubscribing from topic %s", subscription.topicChannel.Topic)
 					}
 					return
 				case message := <-subscription.topicChannel.Messages:
