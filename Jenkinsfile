@@ -4,7 +4,7 @@
 
 @Library("devops-libraries") _
 
-goModVersionTag(
+repoVersionTag(
     project: "go-mod-messaging",
     version: "3.1"
 )
