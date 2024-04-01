@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/xrtmodels"
@@ -30,7 +31,7 @@ func (c *xrtClient) DeviceProfileByName(ctx context.Context, name string) (model
 	if err != nil {
 		return models.DeviceProfile{}, errors.NewCommonEdgeX(errors.Kind(err), "failed to query profile", err)
 	}
-	return response.Result.Profile, nil
+	return dtos.ToDeviceProfileModel(response.Result.Profile), nil
 }
 
 func (c *xrtClient) AddDeviceProfile(ctx context.Context, profile models.DeviceProfile) errors.EdgeX {
