@@ -1,4 +1,4 @@
-// Copyright (C) 2023 IOTech Ltd
+// Copyright (C) 2023-2024 IOTech Ltd
 
 package central
 
@@ -6,8 +6,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/xrtmodels"
 )
 
@@ -22,18 +22,18 @@ func (c *xrtClient) AllDeviceProfiles(ctx context.Context) ([]string, errors.Edg
 	return response.Result.Profiles, nil
 }
 
-func (c *xrtClient) DeviceProfileByName(ctx context.Context, name string) (models.DeviceProfile, errors.EdgeX) {
+func (c *xrtClient) DeviceProfileByName(ctx context.Context, name string) (dtos.DeviceProfile, errors.EdgeX) {
 	request := xrtmodels.NewProfileGetRequest(name, clientName)
 	var response xrtmodels.ProfileResponse
 
 	err := c.sendXrtRequest(ctx, request.RequestId, request, &response)
 	if err != nil {
-		return models.DeviceProfile{}, errors.NewCommonEdgeX(errors.Kind(err), "failed to query profile", err)
+		return dtos.DeviceProfile{}, errors.NewCommonEdgeX(errors.Kind(err), "failed to query profile", err)
 	}
 	return response.Result.Profile, nil
 }
 
-func (c *xrtClient) AddDeviceProfile(ctx context.Context, profile models.DeviceProfile) errors.EdgeX {
+func (c *xrtClient) AddDeviceProfile(ctx context.Context, profile dtos.DeviceProfile) errors.EdgeX {
 	request := xrtmodels.NewProfileAddRequest(profile, clientName)
 	var response xrtmodels.CommonResponse
 
@@ -44,7 +44,7 @@ func (c *xrtClient) AddDeviceProfile(ctx context.Context, profile models.DeviceP
 	return nil
 }
 
-func (c *xrtClient) UpdateDeviceProfile(ctx context.Context, profile models.DeviceProfile) errors.EdgeX {
+func (c *xrtClient) UpdateDeviceProfile(ctx context.Context, profile dtos.DeviceProfile) errors.EdgeX {
 	request := xrtmodels.NewProfileUpdateRequest(profile, clientName)
 	var response xrtmodels.CommonResponse
 

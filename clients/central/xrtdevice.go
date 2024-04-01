@@ -1,4 +1,4 @@
-// Copyright (C) 2023 IOTech Ltd
+// Copyright (C) 2023-2024 IOTech Ltd
 
 package central
 
@@ -6,8 +6,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/xrtmodels"
 )
 
@@ -33,7 +33,7 @@ func (c *xrtClient) DeviceByName(ctx context.Context, name string) (xrtmodels.De
 	return response.Result.Device, nil
 }
 
-func (c *xrtClient) AddDevice(ctx context.Context, device models.Device) errors.EdgeX {
+func (c *xrtClient) AddDevice(ctx context.Context, device dtos.Device) errors.EdgeX {
 	xrtDevice, err := xrtmodels.ToXrtDevice(device)
 	if err != nil {
 		return errors.NewCommonEdgeX(errors.KindServerError, "failed to convert Edgex device to XRT device data", err)
@@ -48,7 +48,7 @@ func (c *xrtClient) AddDevice(ctx context.Context, device models.Device) errors.
 	return nil
 }
 
-func (c *xrtClient) UpdateDevice(ctx context.Context, device models.Device) errors.EdgeX {
+func (c *xrtClient) UpdateDevice(ctx context.Context, device dtos.Device) errors.EdgeX {
 	xrtDevice, err := xrtmodels.ToXrtDevice(device)
 	if err != nil {
 		return errors.NewCommonEdgeX(errors.KindServerError, "failed to convert Edgex device to XRT device data", err)
@@ -75,7 +75,7 @@ func (c *xrtClient) DeleteDeviceByName(ctx context.Context, name string) errors.
 }
 
 // AddDiscoveredDevice adds discovered device without profile, which means the device is not usable until the profile is set or generate by device:scan
-func (c *xrtClient) AddDiscoveredDevice(ctx context.Context, device models.Device) errors.EdgeX {
+func (c *xrtClient) AddDiscoveredDevice(ctx context.Context, device dtos.Device) errors.EdgeX {
 	xrtDevice, err := xrtmodels.ToXrtDevice(device)
 	if err != nil {
 		return errors.NewCommonEdgeX(errors.KindServerError, "failed to convert Edgex device to XRT device data", err)
@@ -91,7 +91,7 @@ func (c *xrtClient) AddDiscoveredDevice(ctx context.Context, device models.Devic
 }
 
 // ScanDevice checks a device profile for updates.
-func (c *xrtClient) ScanDevice(ctx context.Context, device models.Device) errors.EdgeX {
+func (c *xrtClient) ScanDevice(ctx context.Context, device dtos.Device) errors.EdgeX {
 	xrtDevice, err := xrtmodels.ToXrtDevice(device)
 	if err != nil {
 		return errors.NewCommonEdgeX(errors.KindServerError, "failed to convert Edgex device to XRT device data", err)
