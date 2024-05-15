@@ -91,12 +91,13 @@ func (c *xrtClient) AddDiscoveredDevice(ctx context.Context, device dtos.Device)
 }
 
 // ScanDevice checks a device profile for updates.
-func (c *xrtClient) ScanDevice(ctx context.Context, device dtos.Device) errors.EdgeX {
+func (c *xrtClient) ScanDevice(ctx context.Context, device dtos.Device, options map[string]any) errors.EdgeX {
 	xrtDevice, err := xrtmodels.ToXrtDevice(device)
 	if err != nil {
 		return errors.NewCommonEdgeX(errors.KindServerError, "failed to convert Edgex device to XRT device data", err)
 	}
-	request := xrtmodels.NewDeviceScanRequest(xrtDevice, clientName)
+	request := xrtmodels.NewDeviceScanRequest(xrtDevice, clientName, options)
+	c.lc.Debugf("Sending device scan request for device %s with profile name %s and options %v", request.DeviceName, request.ProfileName, request.Options)
 	var response xrtmodels.CommonResponse
 
 	// use discovery request for auto-generate or updating the profile
@@ -118,7 +119,7 @@ func (c *xrtClient) ReadDeviceResources(ctx context.Context, deviceName string, 
 	return response.Result, nil
 }
 
-func (c *xrtClient) WriteDeviceResources(ctx context.Context, deviceName string, resourceValuePairs, options map[string]interface{}) errors.EdgeX {
+func (c *xrtClient) WriteDeviceResources(ctx context.Context, deviceName string, resourceValuePairs, options map[string]any) errors.EdgeX {
 	request := xrtmodels.NewDeviceResourceSetRequest(deviceName, clientName, resourceValuePairs, options)
 	var response xrtmodels.CommonResponse
 
