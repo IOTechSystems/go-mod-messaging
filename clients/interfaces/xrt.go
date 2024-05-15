@@ -19,10 +19,10 @@ type XrtClient interface {
 	UpdateDevice(ctx context.Context, device dtos.Device) errors.EdgeX
 	DeleteDeviceByName(ctx context.Context, name string) errors.EdgeX
 	AddDiscoveredDevice(ctx context.Context, device dtos.Device) errors.EdgeX
-	ScanDevice(ctx context.Context, device dtos.Device) errors.EdgeX
+	ScanDevice(ctx context.Context, device dtos.Device, options map[string]any) errors.EdgeX
 
 	ReadDeviceResources(ctx context.Context, deviceName string, resourceNames []string) (xrtmodels.MultiResourcesResult, errors.EdgeX)
-	WriteDeviceResources(ctx context.Context, deviceName string, resourceValuePairs, options map[string]interface{}) errors.EdgeX
+	WriteDeviceResources(ctx context.Context, deviceName string, resourceValuePairs, options map[string]any) errors.EdgeX
 
 	AllSchedules(ctx context.Context) ([]string, errors.EdgeX)
 	AddSchedule(ctx context.Context, schedule xrtmodels.Schedule) errors.EdgeX
