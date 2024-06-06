@@ -22,6 +22,7 @@ func FetchXRTResponse(ctx context.Context, requestId string, requestMap RequestM
 		requestMap.Delete(requestId)
 	}()
 
+	fmt.Printf("Wait for message from requestId %s \n", requestId)
 	timeout := time.After(responseTimeout)
 	select {
 	case <-ctx.Done():

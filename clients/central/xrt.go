@@ -150,11 +150,13 @@ func (c *xrtClient) sendXrtRequestWithTimeout(ctx context.Context, requestTopic 
 	// Before publishing the request, we should create responseChan to receive the response from XRT
 	c.requestMap.Add(requestId)
 
+	c.lc.Debugf("PublishBinaryData %s", requestId)
 	err = c.messageBus.PublishBinaryData(jsonData, requestTopic)
 	if err != nil {
 		return errors.NewCommonEdgeX(errors.Kind(err), "failed to send the XRT request", err)
 	}
 
+	c.lc.Debugf("FetchXRTResponse %s", requestId)
 	cmdResponseBytes, err := utils.FetchXRTResponse(ctx, requestId, c.requestMap, responseTimeout)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
