@@ -3,6 +3,7 @@
 package mqtt
 
 import (
+	"fmt"
 	pahoMqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/edgexfoundry/go-mod-messaging/v3/pkg/types"
 )
@@ -63,6 +64,7 @@ func newBinaryDataMessageHandler(messageChannel chan<- types.MessageEnvelope) pa
 		// Use MessageEnvelope.Payload to store the binary data instead of unmarshalling binary to MessageEnvelope
 		messageEnvelope := types.NewMessageEnvelopeForRequest(message.Payload(), nil)
 		messageEnvelope.ReceivedTopic = message.Topic()
+		fmt.Printf("Received %s %s", message.Topic(), string(message.Payload()))
 		messageChannel <- messageEnvelope
 	}
 }
