@@ -235,7 +235,7 @@ func initSubscriptions(ctx context.Context, xrtClient *xrtClient, clientOptions 
 					return
 				case message := <-subscription.topicChannel.Messages:
 					lc.Debugf("Received message from the topic %s", subscription.topicChannel.Topic)
-					subscription.messageHandler(message)
+					go subscription.messageHandler(message)
 				}
 			}
 		}(sub)
