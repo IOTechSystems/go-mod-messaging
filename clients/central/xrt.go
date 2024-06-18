@@ -53,10 +53,11 @@ type CommandOptions struct {
 
 // DiscoveryOptions provides the config for sending the discovery request like discovery:trigger, device:scan
 type DiscoveryOptions struct {
-	DiscoveryTopic          string
-	DiscoveryMessageHandler MessageHandler
-	DiscoveryDuration       time.Duration
-	DiscoveryTimeout        time.Duration
+	DiscoveryTopic           string
+	DiscoveryMessageHandler  MessageHandler
+	DiscoveryDuration        time.Duration
+	DiscoveryTimeout         time.Duration
+	ExtentedDiscoveryOptions map[string]any
 }
 
 // StatusOptions provides the config for subscribing the XRT status
@@ -100,11 +101,16 @@ func NewCommandOptions(commandTopic string) *CommandOptions {
 }
 
 func NewDiscoveryOptions(discoveryTopic string, discoveryMessageHandler MessageHandler, discoveryDuration, discoveryTimeout time.Duration) *DiscoveryOptions {
+	return NewDiscoveryOptionsExtended(discoveryTopic, discoveryMessageHandler, discoveryDuration, discoveryTimeout, make(map[string]any))
+}
+
+func NewDiscoveryOptionsExtended(discoveryTopic string, discoveryMessageHandler MessageHandler, discoveryDuration, discoveryTimeout time.Duration, extendedDiscoveryOptions map[string]any) *DiscoveryOptions {
 	return &DiscoveryOptions{
-		DiscoveryTopic:          discoveryTopic,
-		DiscoveryMessageHandler: discoveryMessageHandler,
-		DiscoveryDuration:       discoveryDuration,
-		DiscoveryTimeout:        discoveryTimeout,
+		DiscoveryTopic:           discoveryTopic,
+		DiscoveryMessageHandler:  discoveryMessageHandler,
+		DiscoveryDuration:        discoveryDuration,
+		DiscoveryTimeout:         discoveryTimeout,
+		ExtentedDiscoveryOptions: extendedDiscoveryOptions,
 	}
 }
 
