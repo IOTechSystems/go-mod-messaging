@@ -48,7 +48,9 @@ type ClientOptions struct {
 
 // CommandOptions provides the config for sending the request to manage components
 type CommandOptions struct {
-	CommandTopic string
+	CommandTopic            string
+	DiscoveryTopic          string
+	DiscoveryMessageHandler MessageHandler
 }
 
 // DiscoveryOptions provides the config for sending the discovery request like discovery:trigger, device:scan
@@ -94,9 +96,11 @@ func NewClientOptions(commandOptions *CommandOptions, discoveryOptions *Discover
 	}
 }
 
-func NewCommandOptions(commandTopic string) *CommandOptions {
+func NewCommandOptions(commandTopic string, discoveryTopic string, discoveryMessageHandler MessageHandler) *CommandOptions {
 	return &CommandOptions{
-		CommandTopic: commandTopic,
+		CommandTopic:            commandTopic,
+		DiscoveryTopic:          discoveryTopic,
+		DiscoveryMessageHandler: discoveryMessageHandler,
 	}
 }
 
@@ -272,10 +276,17 @@ func commandReplyHandler(requestMap utils.RequestMap, lc logger.LoggingClient) M
 
 func createSubscriptions(xrtClient *xrtClient, clientOptions *ClientOptions) []Subscription {
 	var subscriptions []Subscription
-	subscriptions = append(subscriptions, subscription(xrtClient.replyTopic, commandReplyHandler(xrtClient.requestMap, xrtClient.lc)))
+	if xrtClient.replyTopic != "" {
+		subscriptions = append(subscriptions, subscription(xrtClient.replyTopic, commandReplyHandler(xrtClient.requestMap, xrtClient.lc)))
+	}
 
 	if clientOptions == nil {
 		return subscriptions
+	}
+	if clientOptions.CommandOptions != nil {
+		if clientOptions.CommandOptions.DiscoveryTopic != "" && clientOptions.CommandOptions.DiscoveryMessageHandler != nil {
+			subscriptions = append(subscriptions, subscription(clientOptions.CommandOptions.DiscoveryTopic, clientOptions.CommandOptions.DiscoveryMessageHandler))
+		}
 	}
 	if clientOptions.DiscoveryOptions != nil {
 		if clientOptions.DiscoveryOptions.DiscoveryTopic != "" && clientOptions.DiscoveryOptions.DiscoveryMessageHandler != nil {

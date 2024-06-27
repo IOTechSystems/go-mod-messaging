@@ -1,8 +1,10 @@
-// Copyright (C) 2023 IOTech Ltd
+// Copyright (C) 2023-2024 IOTech Ltd
 
 package mqtt
 
 import (
+	"errors"
+
 	pahoMqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/edgexfoundry/go-mod-messaging/v3/pkg/types"
 )
@@ -12,6 +14,10 @@ const (
 )
 
 func (mc *Client) PublishBinaryData(data []byte, topic string) error {
+	if mc.mqttClient == nil {
+		return errors.New("mqtt client not exists")
+	}
+
 	optionsReader := mc.mqttClient.OptionsReader()
 
 	return getTokenError(
@@ -26,6 +32,10 @@ func (mc *Client) PublishBinaryData(data []byte, topic string) error {
 }
 
 func (mc *Client) SubscribeBinaryData(topics []types.TopicChannel, messageErrors chan error) error {
+	if mc.mqttClient == nil {
+		return errors.New("mqtt client not exists")
+	}
+
 	optionsReader := mc.mqttClient.OptionsReader()
 
 	for _, topic := range topics {
