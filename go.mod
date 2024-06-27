@@ -42,4 +42,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/edgexfoundry/go-mod-core-contracts/v3 => github.com/IOTechSystems/go-mod-core-contracts/v3 v3.1.52
+replace github.com/edgexfoundry/go-mod-core-contracts/v3 => github.com/IOTechSystems/go-mod-core-contracts/v3 v3.1.55
