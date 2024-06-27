@@ -1,5 +1,5 @@
-github.com/IOTechSystems/go-mod-core-contracts/v3 v3.1.52 h1:QkHyMPIAt2BOqROXwTSjN05pyNXra01g0vFl9Q7MINI=
-github.com/IOTechSystems/go-mod-core-contracts/v3 v3.1.52/go.mod h1:NuHplaPeP6SDnjiQEaAnv5Xallc5yHdpNrFXW01c+4Y=
+github.com/IOTechSystems/go-mod-core-contracts/v3 v3.1.55 h1:GIbeqiTf028VTb5/bZrwbVbXpyLUqmEN+K4sJaBabxw=
+github.com/IOTechSystems/go-mod-core-contracts/v3 v3.1.55/go.mod h1:NuHplaPeP6SDnjiQEaAnv5Xallc5yHdpNrFXW01c+4Y=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/eclipse/paho.mqtt.golang v1.4.3 h1:2kwcUGn8seMUfWndX0hGbvH8r7crgcJguQNCyp70xik=
