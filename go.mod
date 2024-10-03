@@ -1,6 +1,6 @@
 module github.com/edgexfoundry/go-mod-messaging/v3
 
-go 1.21
+go 1.23
 
 require (
 	github.com/eclipse/paho.mqtt.golang v1.5.0
@@ -20,7 +20,7 @@ require (
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.22.0 // indirect
+	github.com/go-playground/validator/v10 v10.22.1 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
@@ -37,9 +37,9 @@ require (
 	golang.org/x/net v0.28.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/sys v0.24.0 // indirect
-	golang.org/x/text v0.17.0 // indirect
+	golang.org/x/text v0.19.0 // indirect
 	golang.org/x/tools v0.24.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/edgexfoundry/go-mod-core-contracts/v3 => github.com/IOTechSystems/go-mod-core-contracts/v3 v3.1.69
+replace github.com/edgexfoundry/go-mod-core-contracts/v3 => github.com/IOTechSystems/go-mod-core-contracts/v3 v3.1.76
