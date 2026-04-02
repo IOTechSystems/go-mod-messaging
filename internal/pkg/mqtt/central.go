@@ -20,7 +20,7 @@ func (mc *Client) PublishBinaryData(data []byte, topic string) error {
 
 	optionsReader := mc.mqttClient.OptionsReader()
 
-	return getTokenError(
+	err := getTokenError(
 		mc.mqttClient.Publish(
 			topic,
 			optionsReader.WillQos(),
@@ -29,6 +29,27 @@ func (mc *Client) PublishBinaryData(data []byte, topic string) error {
 		optionsReader.ConnectTimeout(),
 		PublishOperation,
 		"Unable to publish message")
+	if err == nil {
+		return nil
+	}
+
+	// If publish failed and connection is lost, attempt reconnect and retry once.
+	if !mc.IsConnected() {
+		if reconnErr := mc.Connect(); reconnErr != nil {
+			return NewOperationErr(PublishOperation, "connection lost and reconnect failed: "+reconnErr.Error())
+		}
+		return getTokenError(
+			mc.mqttClient.Publish(
+				topic,
+				optionsReader.WillQos(),
+				optionsReader.WillRetained(),
+				data),
+			optionsReader.ConnectTimeout(),
+			PublishOperation,
+			"Unable to publish message after reconnect")
+	}
+
+	return err
 }
 
 func (mc *Client) SubscribeBinaryData(topics []types.TopicChannel, messageErrors chan error) error {
