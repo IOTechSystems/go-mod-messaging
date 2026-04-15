@@ -52,6 +52,8 @@ type Client struct {
 	unmarshaller          MessageUnmarshaller
 	existingSubscriptions map[string]existingSubscription
 	subscriptionMutex     *sync.Mutex
+	connectMutex          *sync.Mutex
+	subsReady             chan struct{} // closed by onConnectHandler when all subscriptions are re-established
 }
 
 type existingSubscription struct {
@@ -70,6 +72,7 @@ func NewMQTTClient(config types.MessageBusConfig) (*Client, error) {
 		unmarshaller:          json.Unmarshal,
 		existingSubscriptions: map[string]existingSubscription{},
 		subscriptionMutex:     new(sync.Mutex),
+		connectMutex:          new(sync.Mutex),
 	}
 
 	return client, nil
@@ -89,6 +92,7 @@ func NewMQTTClientWithCreator(
 		unmarshaller:          unmarshaller,
 		existingSubscriptions: make(map[string]existingSubscription),
 		subscriptionMutex:     new(sync.Mutex),
+		connectMutex:          new(sync.Mutex),
 	}
 
 	return client, nil
@@ -97,6 +101,9 @@ func NewMQTTClientWithCreator(
 // Connect establishes a connection to a MQTT server.
 // This must be called before any other functionality provided by the Client.
 func (mc *Client) Connect() error {
+	mc.connectMutex.Lock()
+	defer mc.connectMutex.Unlock()
+
 	if mc.mqttClient == nil {
 		// Move created MQTT Client here since we need to set the onConnectHandler which needs to have access to
 		// the Client's activeSubscriptions. This was not possible from the factory method.
@@ -108,18 +115,56 @@ func (mc *Client) Connect() error {
 	}
 
 	// Avoid reconnecting if already connected.
-	if mc.mqttClient.IsConnected() {
+	if mc.mqttClient.IsConnectionOpen() {
 		return nil
 	}
 
 	optionsReader := mc.mqttClient.OptionsReader()
 
-	return getTokenError(
+	connectTimeout := optionsReader.ConnectTimeout()
+
+	// Paho's Disconnect() is unreliable when the client is reconnecting. Instead, replace the
+	// paho client with a fresh instance. The old client is cleaned up in the background;
+	// the MQTT broker will terminate the old connection when it sees the same ClientID.
+	oldClient := mc.mqttClient
+	go oldClient.Disconnect(0)
+
+	newClient, err := mc.creator(mc.configuration, mc.onConnectHandler)
+	if err != nil {
+		return err
+	}
+	mc.mqttClient = newClient
+
+	// Prepare channel for onConnectHandler to signal when subscriptions are ready.
+	hasSubscriptions := len(mc.existingSubscriptions) > 0
+	if hasSubscriptions {
+		mc.subsReady = make(chan struct{})
+	}
+
+	connectErr := getTokenError(
 		mc.mqttClient.Connect(),
-		optionsReader.ConnectTimeout(),
+		connectTimeout,
 		ConnectOperation,
 		"Unable to connect")
+	if connectErr != nil {
+		return connectErr
+	}
+
+	// Wait for onConnectHandler to finish re-subscribing before returning.
+	// onConnectHandler runs in a separate goroutine (paho: go c.options.OnConnect(c)),
+	// so without this wait, callers may publish before subscriptions are re-established.
+	if hasSubscriptions {
+		select {
+		case <-mc.subsReady:
+			return nil
+		case <-time.After(connectTimeout):
+			return NewTimeoutError(ConnectOperation, "timed out waiting for subscriptions to be re-established")
+		}
+	}
+
+	return nil
 }
+
 
 func (mc *Client) onConnectHandler(_ pahoMqtt.Client) {
 	optionsReader := mc.mqttClient.OptionsReader()
@@ -139,6 +184,11 @@ func (mc *Client) onConnectHandler(_ pahoMqtt.Client) {
 		if err != nil {
 			subscription.errors <- err
 		}
+	}
+
+	// Signal that all subscriptions have been re-established.
+	if mc.subsReady != nil {
+		close(mc.subsReady)
 	}
 }
 
@@ -211,6 +261,14 @@ func (mc *Client) Unsubscribe(topics ...string) error {
 	}
 
 	return nil
+}
+
+// IsConnected returns true if the MQTT client has an active connection.
+func (mc *Client) IsConnected() bool {
+	if mc.mqttClient == nil {
+		return false
+	}
+	return mc.mqttClient.IsConnectionOpen()
 }
 
 // Disconnect closes the connection to the connected MQTT server.
