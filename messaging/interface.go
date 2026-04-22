@@ -1,6 +1,5 @@
 //
 // Copyright (c) 2023 Intel Corporation
-// Copyright (c) 2026 IOTech Ltd
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -50,9 +49,6 @@ type MessageClient interface {
 
 	// Unsubscribe to unsubscribe from the specified topics.
 	Unsubscribe(topics ...string) error
-
-	// IsConnected returns true if the client is currently connected to the message bus
-	IsConnected() bool
 
 	// Disconnect is to close all connections on the message bus
 	// and TopicChannel will also be closed
