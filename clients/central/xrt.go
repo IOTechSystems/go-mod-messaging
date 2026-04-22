@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2026 IOTech Ltd
+// Copyright (C) 2023-2024 IOTech Ltd
 
 package central
 
@@ -162,17 +162,13 @@ func (c *xrtClient) sendXrtRequestWithTimeout(ctx context.Context, requestTopic 
 
 	err = c.messageBus.PublishBinaryData(jsonData, requestTopic)
 	if err != nil {
-		c.requestMap.Delete(requestId)
 		return errors.NewCommonEdgeX(errors.Kind(err), "failed to send the XRT request", err)
 	}
 
-	c.lc.Debugf("Waiting for XRT response, requestId: %s", requestId)
 	cmdResponseBytes, err := utils.FetchXRTResponse(ctx, requestId, c.requestMap, responseTimeout)
 	if err != nil {
-		c.lc.Errorf("Failed to fetch XRT response for requestId %s: %s", requestId, err.Error())
 		return errors.NewCommonEdgeXWrapper(err)
 	}
-	c.lc.Debugf("Received XRT response for requestId: %s", requestId)
 
 	err = json.Unmarshal(cmdResponseBytes, response)
 	if err != nil {
@@ -204,7 +200,6 @@ func (c *xrtClient) sendXrtRequestWithSubTimeout(ctx context.Context, requestTop
 
 	err = c.messageBus.PublishBinaryData(jsonData, requestTopic)
 	if err != nil {
-		c.requestMap.Delete(requestId)
 		return errors.NewCommonEdgeX(errors.Kind(err), "failed to send the XRT request", err)
 	}
 

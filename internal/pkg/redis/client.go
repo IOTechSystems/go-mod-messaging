@@ -1,7 +1,7 @@
 /********************************************************************************
  *  Copyright 2020 Dell Inc.
  *  Copyright (c) 2023 Intel Corporation
- *  Copyright (C) 2023-2026 IOTech Ltd
+ *  Copyright (C) 2023 IOTech Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -226,11 +226,6 @@ func (c Client) Unsubscribe(topics ...string) error {
 	}
 
 	return nil
-}
-
-// IsConnected returns true if the Redis client exists and is ready.
-func (c Client) IsConnected() bool {
-	return c.redisClient != nil
 }
 
 // Disconnect closes connections to the Redis server.

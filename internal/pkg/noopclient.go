@@ -45,10 +45,6 @@ func (n NoopClient) Subscribe(topics []types.TopicChannel, messageErrors chan er
 	panic("implement me")
 }
 
-func (n NoopClient) IsConnected() bool {
-	panic("implement me")
-}
-
 func (n NoopClient) Disconnect() error {
 	panic("implement me")
 }

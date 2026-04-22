@@ -216,11 +216,6 @@ func (c *Client) Unsubscribe(topics ...string) error {
 	return errs
 }
 
-// IsConnected returns true if the NATS connection exists.
-func (c *Client) IsConnected() bool {
-	return c.connection != nil
-}
-
 // Disconnect drains open subscriptions before closing
 func (c *Client) Disconnect() error {
 	if c.connection == nil {

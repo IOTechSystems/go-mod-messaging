@@ -211,7 +211,7 @@ func (MockMQTTClient) IsConnected() bool {
 }
 
 func (MockMQTTClient) IsConnectionOpen() bool {
-	return false
+	panic("function not expected to be invoked")
 }
 
 func (MockMQTTClient) SubscribeMultiple(map[string]byte, pahoMqtt.MessageHandler) pahoMqtt.Token {
